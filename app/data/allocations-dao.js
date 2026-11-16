@@ -74,9 +74,10 @@ const AllocationsDAO = function(db){
                 }
                 throw `The user supplied threshold: ${parsedThreshold} was not valid.`;
                 */
-                return {
-                    $where: `this.userId == ${parsedUserId} && this.stocks > '${threshold}'`
-                };
+                const minStocks = parseInt(threshold, 10);
+                if (!(minStocks >= 0 && minStocks <= 99)) throw `The user supplied threshold: ${threshold} was not valid.`;
+                // query operators, no JavaScript in the query
+                return { userId: parsedUserId, stocks: { $gt: minStocks } };
             }
             return {
                 userId: parsedUserId
